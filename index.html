@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¿Quieres ser mi San Valentín? ❤️</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+
+<style>
+body {
+  margin: 0;
+  height: 100vh;
+  background: #fdf6f0;
+  font-family: 'Dancing Script', cursive;
+  overflow: hidden;
+}
+
+.screen {
+  display: none;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  flex-direction: column;
+}
+
+.active { display: flex; }
+
+.card {
+  background: rgba(255,255,255,0.95);
+  padding: 25px;
+  border-radius: 20px;
+  width: 90%;
+  max-width: 330px;
+  box-shadow: 0 15px 30px rgba(0,0,0,.25);
+  color: #b71c1c;
+  z-index: 10;
+}
+
+h1 { font-size: 32px; }
+
+button, .music-btn {
+  background: #d32f2f;
+  color: #fff;
+  border: none;
+  padding: 12px 20px;
+  margin: 10px;
+  border-radius: 25px;
+  font-size: 20px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+}
+
+/* 💓 ANIMACIÓN BOTÓN */
+.music-btn {
+  opacity: 0;
+  transform: scale(0.5);
+  animation: appear 1.2s ease forwards, pulse 1.8s infinite ease-in-out;
+  animation-delay: 0.8s;
+}
+
+@keyframes appear {
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+
+button:hover, .music-btn:hover { background: #b71c1c; }
+
+/* 🌳 Árbol */
+.tree {
+  position: relative;
+  width: 220px;
+  height: 200px;
+  margin: 20px auto;
+}
+
+.trunk {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 28px;
+  height: 80px;
+  background: #6d4c41;
+  transform: translateX(-50%);
+  border-radius: 5px;
+}
+
+.heart-leaf {
+  position: absolute;
+  color: red;
+  font-size: 20px;
+}
+
+/* 🍂 Corazones cayendo */
+.falling {
+  position: fixed;
+  top: -20px;
+  color: red;
+  z-index: 1;
+  animation: fall linear forwards;
+}
+
+@keyframes fall {
+  0% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(110vh); opacity: 0; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="screen active" id="inicio">
+  <div class="card">
+    <h1>¿Quieres ser mi San Valentín? ❤️</h1>
+    <button onclick="si()">Sí 💕</button>
+    <button onclick="no()">No 💔</button>
+  </div>
+</div>
+
+<div class="screen" id="preguntas">
+  <div class="card" id="pregunta"></div>
+</div>
+
+<div class="screen" id="final">
+  <div class="card">
+    <p>Para el amor de mi vida:</p>
+    <p>Si pudiera elegir un lugar seguro,<br> sería a tu lado.</p>
+
+    <a class="music-btn"
+       href="https://open.spotify.com/track/4cOdK2wGLETKBW3PvgPWqT" 
+       target="_blank">
+       ▶ Nuestra canción ❤️
+    </a>
+
+    <div class="tree" id="tree">
+      <div class="trunk"></div>
+    </div>
+
+    <div id="contador" style="margin-top:10px;font-size:18px; font-weight:bold;"></div>
+  </div>
+</div>
+
+<script>
+/* Navegación */
+const inicio = document.getElementById("inicio");
+const preguntasDiv = document.getElementById("preguntas");
+const final = document.getElementById("final");
+
+function si() {
+  inicio.classList.remove("active");
+  crearArbol(); // Crear el árbol solo al final
+  final.classList.add("active");
+}
+
+function no() {
+  inicio.classList.remove("active");
+  preguntasDiv.classList.add("active");
+  mostrarPregunta();
+}
+
+/* Preguntas */
+const preguntas = [
+  "Déjame confesarte algo… 💌",
+  "Tu comida favorita: hamburguesas y pasta 🍔🍝",
+  "Tu peluche favorito: Lotso 🧸❤️",
+  "Tu música favorita: CNCO 🎶",
+  "Me harías el hombre más feliz del mundo…",
+  "¿Aceptas ser mi San Valentín? 💖"
+];
+let i = 0;
+
+function mostrarPregunta() {
+  document.getElementById("pregunta").innerHTML =
+    `<p>${preguntas[i]}</p>
+     <button onclick="siguiente()">Continuar ❤️</button>`;
+}
+
+function siguiente() {
+  i++;
+  if (i < preguntas.length) {
+    mostrarPregunta();
+  } else {
+    preguntasDiv.classList.remove("active");
+    crearArbol(); // Crear el árbol al final
+    final.classList.add("active");
+  }
+}
+
+/* 🌳 Árbol de corazones */
+function crearArbol() {
+    const tree = document.getElementById("tree");
+    // Limpiar árbol por si acaso
+    const existingHearts = tree.getElementsByClassName("heart-leaf");
+    while(existingHearts.length > 0){
+        existingHearts[0].parentNode.removeChild(existingHearts[0]);
+    }
+    
+    // Crear el tronco de nuevo si es necesario o dejarlo estático, 
+    // aquí solo añadimos hojas
+    for (let j = 0; j < 45; j++) {
+      const h = document.createElement("div");
+      h.className = "heart-leaf";
+      h.innerHTML = "❤️";
+      // Ajuste para que queden centrados sobre el tronco
+      let leftPos = (Math.random() * 180); 
+      let topPos = (Math.random() * 120);
+      
+      h.style.left = leftPos + "px";
+      h.style.top = topPos + "px";
+      tree.appendChild(h);
+    }
+}
+
+/* 🍂 Corazones cayendo */
+setInterval(() => {
+  const h = document.createElement("div");
+  h.className = "falling";
+  h.innerHTML = "❤️";
+  h.style.left = Math.random() * window.innerWidth + "px";
+  h.style.fontSize = (14 + Math.random()*10) + "px";
+  h.style.animationDuration = (4 + Math.random()*3) + "s";
+  document.body.appendChild(h);
+  setTimeout(() => h.remove(), 7000);
+}, 300);
+
+/* ⏱️ Contador */
+// FECHA: 15 de Diciembre 2024
+const inicioNovios = new Date("2024-12-15T00:00:00");
+
+setInterval(() => {
+  const ahora = new Date();
+  const diff = ahora - inicioNovios;
+  
+  const d = Math.floor(diff / 86400000);
+  const h = Math.floor(diff / 3600000 % 24);
+  const m = Math.floor(diff / 60000 % 60);
+  const s = Math.floor(diff / 1000 % 60);
+  
+  // AQUÍ ESTABA EL ERROR: Faltaban las comillas invertidas (backticks)
+  document.getElementById("contador").innerHTML =
+    `Nos hicimos novios hace:<br>${d} días ${h} h ${m} min ${s} seg`;
+}, 1000);
+</script>
+
+</body>
+</html>
