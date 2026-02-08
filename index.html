@@ -10,21 +10,36 @@
 body {
   margin: 0;
   height: 100vh;
-  background: #fdf6f0;
-  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; /* Letra normal */
+  background: #e0e0e0; /* Color de fondo gris claro como en la imagen */
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   overflow: hidden;
+  position: relative;
+}
+
+/* Suelo */
+.ground {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 150px;
+  background: linear-gradient(to top, #b0b0b0, #d0d0d0);
+  border-top-left-radius: 50% 20px;
+  border-top-right-radius: 50% 20px;
 }
 
 .screen {
-  display: none; /* Oculto por defecto */
+  display: none;
   height: 100vh;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   width: 100%;
+  position: relative;
+  z-index: 2;
 }
 
-.active { display: flex; } /* Clase para mostrar pantallas */
+.active { display: flex; }
 
 /* Tarjeta general */
 .card {
@@ -36,7 +51,7 @@ body {
   text-align: center;
   z-index: 10;
   width: 90%;
-  max-width: 600px; /* Ancho cómodo para leer */
+  max-width: 600px;
   transition: all 0.5s ease;
 }
 
@@ -46,7 +61,15 @@ body {
     max-width: 95%;
     padding: 30px;
     text-align: left;
+    background: transparent; /* Tarjeta transparente en el final para ver el árbol */
+    box-shadow: none;
+    color: #b71c1c;
 }
+
+#final .card h2, #final .card p, #final .card a, #final #contador {
+    text-shadow: 1px 1px 2px rgba(255,255,255,0.8); /* Sombra para leer mejor sobre el fondo */
+}
+
 
 h1 { font-size: 32px; margin-bottom: 25px; line-height: 1.3; }
 p { font-size: 22px; line-height: 1.6; margin-bottom: 20px; }
@@ -113,37 +136,46 @@ button:hover, .music-btn:hover {
 }
 
 .final-right-column {
-    flex: 1; 
+    flex: 1.2; 
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-end;
+    height: 500px;
+    position: relative;
 }
 
-/* 🌳 ÁRBOL */
+/* 🌳 ÁRBOL NUEVO */
 .tree-container {
     position: relative;
-    width: 350px;
-    height: 420px;
+    width: 450px;
+    height: 500px;
 }
 
 .trunk {
     position: absolute;
     bottom: 0;
     left: 50%;
-    width: 45px;
-    height: 150px;
-    background: linear-gradient(to right, #4e342e, #6d4c41, #4e342e);
+    width: 60px;
+    height: 180px;
+    background: #2e1a16; /* Color oscuro del tronco */
     transform: translateX(-50%);
     border-radius: 5px;
-    z-index: 2;
+    z-index: 1;
 }
 
+/* Ramas principales */
+.branch {
+    position: absolute;
+    background: #2e1a16;
+    z-index: 1;
+}
+
+/* Corazones del árbol */
 .heart-leaf {
     position: absolute;
     color: #d32f2f;
-    font-size: 24px;
-    z-index: 3;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    font-size: 20px;
+    z-index: 2;
 }
 
 /* 🍂 Corazones cayendo */
@@ -151,21 +183,22 @@ button:hover, .music-btn:hover {
     position: fixed;
     top: -30px;
     color: #e53935;
-    z-index: 1;
-    opacity: 0.8;
+    z-index: 3;
+    opacity: 0.9;
     animation: fall linear forwards;
 }
 
 @keyframes fall {
-  0% { transform: translateY(0) rotate(0deg); opacity: 0.9; }
-  100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  80% { opacity: 1; }
+  100% { transform: translateY(calc(100vh - 100px)) rotate(360deg); opacity: 0; }
 }
 
 /* Contador */
 #contador-container {
     margin-top: 30px;
     padding-top: 15px;
-    border-top: 2px solid #eee;
+    border-top: 2px solid rgba(211, 47, 47, 0.3);
     text-align: left;
     width: 100%;
 }
@@ -178,6 +211,8 @@ button:hover, .music-btn:hover {
 </head>
 
 <body>
+
+<div class="ground"></div>
 
 <div class="screen active" id="narrativa">
   <div class="card" id="card-content">
@@ -205,7 +240,7 @@ button:hover, .music-btn:hover {
         <div class="final-right-column">
              <div class="tree-container" id="tree">
                  <div class="trunk"></div>
-             </div>
+                 </div>
         </div>
     </div>
 
@@ -219,49 +254,15 @@ button:hover, .music-btn:hover {
 
 <script>
 /* --- LÓGICA DE LAS DIAPOSITIVAS --- */
-// Definimos los pasos de la historia SIN EMOJIS
 const slides = [
-  // Paso 0: Pregunta Inicial (Ya está en el HTML)
-  
-  // Paso 1
-  {
-    text: "No creas que es un simple no...",
-    btn: "Continuar"
-  },
-  // Paso 2
-  {
-    text: "Es un no porque hay algo que quiero recordarte...",
-    btn: "Siguiente"
-  },
-  // Paso 3
-  {
-    text: "Fuiste el mejor regalo que pude recibir en un cumpleaños",
-    btn: "Siguiente"
-  },
-  // Paso 4
-  {
-    text: "Un 13 de septiembre del 2024 vi los ojos más lindos de este universo",
-    btn: "Siguiente"
-  },
-  // Paso 5
-  {
-    text: "Aprendí tus comidas favoritas como las hamburguesas y la pasta",
-    btn: "Siguiente"
-  },
-  // Paso 6
-  {
-    text: "Aprendí tus canciones favoritas y tus películas",
-    btn: "Siguiente"
-  },
-  // Paso 7
-  {
-    text: "Pero sobre todo, aprendí a amar como no lo había hecho nunca",
-    btn: "Siguiente"
-  },
-  // Paso 8: LA PREGUNTA FINAL CON INPUT
-  {
-    special: true // Indica que es la diapositiva de escribir
-  }
+  { text: "No creas que es un simple no...", btn: "Continuar" },
+  { text: "Es un no porque hay algo que quiero recordarte...", btn: "Siguiente" },
+  { text: "Fuiste el mejor regalo que pude recibir en un cumpleaños", btn: "Siguiente" },
+  { text: "Un 13 de septiembre del 2024 vi los ojos más lindos de este universo", btn: "Siguiente" },
+  { text: "Aprendí tus comidas favoritas como las hamburguesas y la pasta", btn: "Siguiente" },
+  { text: "Aprendí tus canciones favoritas y tus películas", btn: "Siguiente" },
+  { text: "Pero sobre todo, aprendí a amar como no lo había hecho nunca", btn: "Siguiente" },
+  { special: true }
 ];
 
 let step = 0;
@@ -270,16 +271,11 @@ const narrativaScreen = document.getElementById("narrativa");
 const finalScreen = document.getElementById("final");
 
 function nextSlide() {
-    // Si todavía hay pasos en la historia
     if (step < slides.length) {
         const slide = slides[step];
-        
-        // Efecto de desvanecer
         cardContent.style.opacity = 0;
-        
         setTimeout(() => {
             if (slide.special) {
-                // Es la diapositiva final de pregunta con input
                 cardContent.innerHTML = `
                     <h1>Ahora déjame preguntarte...<br>¿Quieres ser mi San Valentín?</h1>
                     <input type="text" id="respuesta-input" placeholder="Escribe tu respuesta aquí..." autofocus>
@@ -288,15 +284,10 @@ function nextSlide() {
                     <p id="error-msg" style="color:red; font-size:16px; display:none;">¡Por favor di que sí!</p>
                 `;
             } else {
-                // Es una diapositiva normal de texto
-                cardContent.innerHTML = `
-                    <h1>${slide.text}</h1>
-                    <button onclick="nextSlide()">${slide.btn}</button>
-                `;
+                cardContent.innerHTML = `<h1>${slide.text}</h1><button onclick="nextSlide()">${slide.btn}</button>`;
             }
             cardContent.style.opacity = 1;
         }, 500);
-        
         step++;
     }
 }
@@ -305,82 +296,94 @@ function verificarRespuesta() {
     const input = document.getElementById("respuesta-input");
     const errorMsg = document.getElementById("error-msg");
     const val = input.value.toLowerCase().trim();
-
-    // Validamos si escribió algo positivo
     if (val.includes("si") || val.includes("sí") || val.includes("claro") || val.includes("obvio") || val.includes("yes") || val.includes("por supuesto")) {
-        // TRANSICIÓN AL FINAL
         narrativaScreen.classList.remove("active");
-        crearArbolSuperFrondoso(); // Generar árbol
+        crearArbolDetallado();
+        iniciarLluvia();
         finalScreen.classList.add("active");
     } else {
-        // Si escribe otra cosa o lo deja vacío
         errorMsg.style.display = "block";
         errorMsg.innerText = "La respuesta correcta tiene dos letras y empieza con 'S'";
     }
 }
 
-/* 🌳 ÁRBOL SÚPER FRONDOSO (VISUAL) */
-function crearArbolSuperFrondoso() {
+/* 🌳 ÁRBOL DETALLADO COMO EN LA IMAGEN */
+function crearArbolDetallado() {
     const tree = document.getElementById("tree");
-    
-    // Limpiar hojas viejas
-    const existingHearts = tree.getElementsByClassName("heart-leaf");
-    while(existingHearts.length > 0){
-        existingHearts[0].parentNode.removeChild(existingHearts[0]);
-    }
-    
-    // 150 corazones
-    for (let j = 0; j < 150; j++) {
+    const trunk = tree.querySelector('.trunk');
+
+    // Ramas
+    const branches = [
+        { w: 100, h: 10, l: -40, t: 120, r: -30 },
+        { w: 120, h: 12, l: -50, t: 80, r: -45 },
+        { w: 90, h: 8, l: 0, t: 100, r: 30 },
+        { w: 110, h: 10, l: 10, t: 60, r: 45 },
+        { w: 80, h: 8, l: -20, t: 40, r: -20 },
+        { w: 70, h: 6, l: 20, t: 30, r: 20 },
+    ];
+    branches.forEach(b => {
+        const branch = document.createElement('div');
+        branch.className = 'branch';
+        branch.style.width = b.w + 'px';
+        branch.style.height = b.h + 'px';
+        branch.style.left = (trunk.offsetLeft + b.l) + 'px';
+        branch.style.top = b.t + 'px';
+        branch.style.transform = `rotate(${b.r}deg)`;
+        tree.appendChild(branch);
+    });
+
+    // Muchos corazones en la copa
+    const colors = ['#d32f2f', '#c62828', '#b71c1c', '#e53935', '#f44336'];
+    for (let j = 0; j < 350; j++) {
       const h = document.createElement("div");
       h.className = "heart-leaf";
-      h.innerHTML = "❤️"; // Mantenemos el corazón visual del árbol
+      h.innerHTML = "❤";
+      h.style.color = colors[Math.floor(Math.random() * colors.length)];
       
-      let leftBase = (Math.random() * 320) - 10; 
-      let topBase = (Math.random() * 150) + 50;
-      let leftTop = (Math.random() * 200) + 50; 
-      let topTop = (Math.random() * 80) - 20;
+      // Distribución en forma de copa redonda y densa
+      const angle = Math.random() * Math.PI * 2;
+      const radius = Math.sqrt(Math.random()) * 200;
+      let left = 225 + radius * Math.cos(angle);
+      let top = 180 + radius * Math.sin(angle) * 0.8;
 
-      if(Math.random() > 0.5) {
-         h.style.left = leftBase + "px";
-         h.style.top = topBase + "px";
-      } else {
-         h.style.left = leftTop + "px";
-         h.style.top = topTop + "px";
-      }
-
-      h.style.fontSize = (Math.random() * 15 + 15) + "px";
+      h.style.left = (left - 10) + "px";
+      h.style.top = (top - 100) + "px";
+      h.style.fontSize = (Math.random() * 25 + 15) + "px";
       h.style.transform = `rotate(${Math.random() * 360}deg)`;
       tree.appendChild(h);
     }
 }
 
-/* 🍂 Lluvia intensa (VISUAL) */
-setInterval(() => {
-  const h = document.createElement("div");
-  h.className = "falling";
-  h.innerHTML = "❤️"; // Mantenemos la lluvia visual
-  h.style.left = Math.random() * window.innerWidth + "px";
-  h.style.fontSize = (15 + Math.random()*15) + "px";
-  h.style.animationDuration = (3 + Math.random()*4) + "s";
-  document.body.appendChild(h);
-  setTimeout(() => h.remove(), 7000);
-}, 150);
+/* 🍂 Lluvia de corazones al piso */
+function iniciarLluvia() {
+    setInterval(() => {
+      const h = document.createElement("div");
+      h.className = "falling";
+      h.innerHTML = "❤";
+      const colors = ['#d32f2f', '#c62828', '#b71c1c', '#e53935'];
+      h.style.color = colors[Math.floor(Math.random() * colors.length)];
+      
+      // Caen desde la copa del árbol
+      h.style.left = (window.innerWidth / 2 + (Math.random() * 400 - 200)) + "px";
+      h.style.top = (Math.random() * 100 + 50) + "px"; 
+
+      h.style.fontSize = (15 + Math.random()*15) + "px";
+      h.style.animationDuration = (4 + Math.random()*3) + "s";
+      document.body.appendChild(h);
+      setTimeout(() => h.remove(), 7000);
+    }, 100);
+}
 
 /* ⏱️ Contador */
-// FECHA: 15 de Diciembre 2024
 const inicioNovios = new Date("2024-12-15T00:00:00");
-
 setInterval(() => {
   const ahora = new Date();
   const diff = ahora - inicioNovios;
-  
   const d = Math.floor(diff / 86400000);
   const h = Math.floor(diff / 3600000 % 24);
   const m = Math.floor(diff / 60000 % 60);
   const s = Math.floor(diff / 1000 % 60);
-  
-  document.getElementById("contador").innerHTML =
-    `${d} días, ${h} horas, ${m} minutos y ${s} segundos.`;
+  document.getElementById("contador").innerHTML = `${d} días, ${h} horas, ${m} minutos y ${s} segundos.`;
 }, 1000);
 </script>
 
