@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Para Marjorie ❤️</title>
+<title>Para Marjorie</title>
 
 <style>
 /* 1. ESTILO GENERAL */
@@ -11,52 +11,55 @@ body {
   margin: 0;
   height: 100vh;
   background: #fdf6f0;
-  /* Fuente normal y legible */
-  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; /* Letra normal */
   overflow: hidden;
 }
 
 .screen {
-  display: none;
+  display: none; /* Oculto por defecto */
   height: 100vh;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  width: 100%;
 }
 
-.active { display: flex; }
+.active { display: flex; } /* Clase para mostrar pantallas */
 
 /* Tarjeta general */
 .card {
   background: rgba(255,255,255,0.96);
-  padding: 30px;
+  padding: 40px;
   border-radius: 20px;
   box-shadow: 0 15px 40px rgba(0,0,0,.2);
   color: #b71c1c;
   text-align: center;
   z-index: 10;
-  max-width: 90%;
+  width: 90%;
+  max-width: 600px; /* Ancho cómodo para leer */
+  transition: all 0.5s ease;
 }
 
 /* Estilos específicos para la tarjeta final más ancha */
 #final .card {
-    width: 800px;
+    width: 850px;
     max-width: 95%;
-    padding: 40px;
+    padding: 30px;
     text-align: left;
 }
 
-h1 { font-size: 36px; margin-bottom: 25px; }
-p { font-size: 20px; line-height: 1.5; }
+h1 { font-size: 32px; margin-bottom: 25px; line-height: 1.3; }
+p { font-size: 22px; line-height: 1.6; margin-bottom: 20px; }
 
+/* Botones */
 button, .music-btn {
   background: #d32f2f;
   color: #fff;
   border: none;
-  padding: 15px 30px;
+  padding: 15px 35px;
   margin: 15px;
   border-radius: 30px;
-  font-size: 22px;
+  font-size: 20px;
   cursor: pointer;
   text-decoration: none;
   display: inline-block;
@@ -67,6 +70,19 @@ button, .music-btn {
 button:hover, .music-btn:hover { 
     background: #b71c1c;
     transform: scale(1.05);
+}
+
+/* Input de texto para la respuesta final */
+#respuesta-input {
+    padding: 15px;
+    font-size: 20px;
+    border-radius: 10px;
+    border: 2px solid #d32f2f;
+    outline: none;
+    width: 70%;
+    margin-bottom: 15px;
+    font-family: inherit;
+    text-align: center;
 }
 
 /* 💓 ANIMACIÓN BOTÓN MÚSICA */
@@ -85,37 +101,37 @@ button:hover, .music-btn:hover {
 /* --- ESTRUCTURA FINAL (LAYOUT) --- */
 .final-layout-container {
     display: flex;
-    flex-direction: row; /* Elementos lado a lado */
+    flex-direction: row;
     justify-content: space-between;
     align-items: center;
     width: 100%;
 }
 
 .final-left-column {
-    flex: 1; /* Texto a la izquierda */
-    padding-right: 30px;
+    flex: 1; 
+    padding-right: 20px;
 }
 
 .final-right-column {
-    flex: 1; /* Árbol a la derecha */
+    flex: 1; 
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-/* 🌳 ÁRBOL MÁS GRANDE */
+/* 🌳 ÁRBOL */
 .tree-container {
     position: relative;
     width: 350px;
-    height: 400px;
+    height: 420px;
 }
 
 .trunk {
     position: absolute;
     bottom: 0;
     left: 50%;
-    width: 40px;
-    height: 140px;
+    width: 45px;
+    height: 150px;
     background: linear-gradient(to right, #4e342e, #6d4c41, #4e342e);
     transform: translateX(-50%);
     border-radius: 5px;
@@ -145,10 +161,10 @@ button:hover, .music-btn:hover {
   100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
 }
 
-/* Contador abajo a la izquierda */
+/* Contador */
 #contador-container {
-    margin-top: 40px;
-    padding-top: 20px;
+    margin-top: 30px;
+    padding-top: 15px;
     border-top: 2px solid #eee;
     text-align: left;
     width: 100%;
@@ -163,14 +179,10 @@ button:hover, .music-btn:hover {
 
 <body>
 
-<div class="screen active" id="inicio">
-  <div class="card">
-    <h1>¿Quieres ser mi San Valentín? ❤️</h1>
-    <div style="margin-top: 30px;">
-        <button onclick="si()" style="font-size: 28px; padding: 20px 40px;">¡SÍ, QUIERO! 💕</button>
-        <br>
-        <button onclick="no()" style="background: #555; font-size: 18px;">No 💔</button>
-    </div>
+<div class="screen active" id="narrativa">
+  <div class="card" id="card-content">
+    <h1>¿Quieres ser mi San Valentín?</h1>
+    <button onclick="nextSlide()">No</button>
   </div>
 </div>
 
@@ -178,16 +190,15 @@ button:hover, .music-btn:hover {
   <div class="card">
     
     <div class="final-layout-container">
-        
         <div class="final-left-column">
-            <h2 style="font-size: 32px; margin-top: 0;">Para el amor de mi vida, Marjorie:</h2>
-            <p style="font-size: 24px;">Si pudiera elegir un lugar seguro en todo el mundo,<br> sería siempre a tu lado.</p>
-            <p style="font-size: 22px;">Gracias por hacerme tan feliz.</p>
-
+            <h2 style="font-size: 32px; margin-top: 0;">¡Sabía que dirías que sí!</h2>
+            <p style="font-size: 22px;">Para el amor de mi vida, Marjorie:</p>
+            <p style="font-size: 20px;">Si pudiera elegir un lugar seguro en todo el mundo,<br> sería siempre a tu lado.</p>
+            
             <a class="music-btn"
                href="https://open.spotify.com/intl-es/track/609E1JCInJncactoMmkDon?si=823c17c86f1949cd" 
                target="_blank">
-               <span>▶ Escucha nuestra canción ❤️</span>
+               <span>▶ Escucha nuestra canción</span>
             </a>
         </div>
 
@@ -199,7 +210,7 @@ button:hover, .music-btn:hover {
     </div>
 
     <div id="contador-container">
-        <p style="margin-bottom: 10px; font-size: 18px;">Llevamos escribiendo nuestra historia:</p>
+        <p style="margin-bottom: 5px; font-size: 18px;">Llevamos escribiendo nuestra historia:</p>
         <div id="contador">Calculando tiempo juntos...</div>
     </div>
 
@@ -207,43 +218,122 @@ button:hover, .music-btn:hover {
 </div>
 
 <script>
-/* Navegación */
-const inicio = document.getElementById("inicio");
-const final = document.getElementById("final");
+/* --- LÓGICA DE LAS DIAPOSITIVAS --- */
+// Definimos los pasos de la historia SIN EMOJIS
+const slides = [
+  // Paso 0: Pregunta Inicial (Ya está en el HTML)
+  
+  // Paso 1
+  {
+    text: "No creas que es un simple no...",
+    btn: "Continuar"
+  },
+  // Paso 2
+  {
+    text: "Es un no porque hay algo que quiero recordarte...",
+    btn: "Siguiente"
+  },
+  // Paso 3
+  {
+    text: "Fuiste el mejor regalo que pude recibir en un cumpleaños",
+    btn: "Siguiente"
+  },
+  // Paso 4
+  {
+    text: "Un 13 de septiembre del 2024 vi los ojos más lindos de este universo",
+    btn: "Siguiente"
+  },
+  // Paso 5
+  {
+    text: "Aprendí tus comidas favoritas como las hamburguesas y la pasta",
+    btn: "Siguiente"
+  },
+  // Paso 6
+  {
+    text: "Aprendí tus canciones favoritas y tus películas",
+    btn: "Siguiente"
+  },
+  // Paso 7
+  {
+    text: "Pero sobre todo, aprendí a amar como no lo había hecho nunca",
+    btn: "Siguiente"
+  },
+  // Paso 8: LA PREGUNTA FINAL CON INPUT
+  {
+    special: true // Indica que es la diapositiva de escribir
+  }
+];
 
-function si() {
-  inicio.classList.remove("active");
-  crearArbolSuperFrondoso();
-  final.classList.add("active");
+let step = 0;
+const cardContent = document.getElementById("card-content");
+const narrativaScreen = document.getElementById("narrativa");
+const finalScreen = document.getElementById("final");
+
+function nextSlide() {
+    // Si todavía hay pasos en la historia
+    if (step < slides.length) {
+        const slide = slides[step];
+        
+        // Efecto de desvanecer
+        cardContent.style.opacity = 0;
+        
+        setTimeout(() => {
+            if (slide.special) {
+                // Es la diapositiva final de pregunta con input
+                cardContent.innerHTML = `
+                    <h1>Ahora déjame preguntarte...<br>¿Quieres ser mi San Valentín?</h1>
+                    <input type="text" id="respuesta-input" placeholder="Escribe tu respuesta aquí..." autofocus>
+                    <br>
+                    <button onclick="verificarRespuesta()">Responder</button>
+                    <p id="error-msg" style="color:red; font-size:16px; display:none;">¡Por favor di que sí!</p>
+                `;
+            } else {
+                // Es una diapositiva normal de texto
+                cardContent.innerHTML = `
+                    <h1>${slide.text}</h1>
+                    <button onclick="nextSlide()">${slide.btn}</button>
+                `;
+            }
+            cardContent.style.opacity = 1;
+        }, 500);
+        
+        step++;
+    }
 }
 
-/* 🚫 BOTÓN NO CON MENSAJE DE BROMA */
-function no() {
-  const cardBody = document.querySelector("#inicio .card");
-  cardBody.innerHTML = `
-    <h1 style="font-size: 50px;">😢</h1>
-    <p style="font-size: 24px; font-weight: bold; color: #d32f2f;">
-       "Solo esta vez te pediré que digas que no, por favor dale click en no"
-    </p>
-    <p style="margin-top: 20px; font-style: italic;">(Es una broma mi amor, por favor di que sí 🥺)</p>
-    <button onclick="location.reload()" style="margin-top: 30px;">Volver a intentarlo ❤️</button>
-  `;
+function verificarRespuesta() {
+    const input = document.getElementById("respuesta-input");
+    const errorMsg = document.getElementById("error-msg");
+    const val = input.value.toLowerCase().trim();
+
+    // Validamos si escribió algo positivo
+    if (val.includes("si") || val.includes("sí") || val.includes("claro") || val.includes("obvio") || val.includes("yes") || val.includes("por supuesto")) {
+        // TRANSICIÓN AL FINAL
+        narrativaScreen.classList.remove("active");
+        crearArbolSuperFrondoso(); // Generar árbol
+        finalScreen.classList.add("active");
+    } else {
+        // Si escribe otra cosa o lo deja vacío
+        errorMsg.style.display = "block";
+        errorMsg.innerText = "La respuesta correcta tiene dos letras y empieza con 'S'";
+    }
 }
 
-/* 🌳 Árbol SÚPER FRONDOSO */
+/* 🌳 ÁRBOL SÚPER FRONDOSO (VISUAL) */
 function crearArbolSuperFrondoso() {
     const tree = document.getElementById("tree");
     
+    // Limpiar hojas viejas
     const existingHearts = tree.getElementsByClassName("heart-leaf");
     while(existingHearts.length > 0){
         existingHearts[0].parentNode.removeChild(existingHearts[0]);
     }
     
-    // 150 corazones para que se vea lleno
+    // 150 corazones
     for (let j = 0; j < 150; j++) {
       const h = document.createElement("div");
       h.className = "heart-leaf";
-      h.innerHTML = "❤️";
+      h.innerHTML = "❤️"; // Mantenemos el corazón visual del árbol
       
       let leftBase = (Math.random() * 320) - 10; 
       let topBase = (Math.random() * 150) + 50;
@@ -260,16 +350,15 @@ function crearArbolSuperFrondoso() {
 
       h.style.fontSize = (Math.random() * 15 + 15) + "px";
       h.style.transform = `rotate(${Math.random() * 360}deg)`;
-      
       tree.appendChild(h);
     }
 }
 
-/* 🍂 Lluvia intensa */
+/* 🍂 Lluvia intensa (VISUAL) */
 setInterval(() => {
   const h = document.createElement("div");
   h.className = "falling";
-  h.innerHTML = "❤️";
+  h.innerHTML = "❤️"; // Mantenemos la lluvia visual
   h.style.left = Math.random() * window.innerWidth + "px";
   h.style.fontSize = (15 + Math.random()*15) + "px";
   h.style.animationDuration = (3 + Math.random()*4) + "s";
